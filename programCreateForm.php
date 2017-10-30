@@ -17,15 +17,10 @@
 </head>
 <body>
 
-
   <?php
-    $date = new DateTime('2017-05-01');
-    $newdate = $date->format('d/m/Y');
-    $date2 = new DateTime('02-06-2017');
-    $newdate2 = $date2->format('Y/m/d');
-    echo $newdate.'<br>';
-    echo $newdate2;
+    $form = '<h1 align="center">Creación del nuevo programa</h1>'
    ?>
+
 
 
   <script type="text/javascript" src="js/jquery.min.js"></script>

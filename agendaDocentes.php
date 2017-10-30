@@ -15,10 +15,12 @@
 
 
 </head>
+
 <body>
-
-
+<div class="container">
+<div>
   <h1 align="center">Agenda de Docentes</h1>
+</div>
 
 <form method="post" id="main-form" class="form-horizontal" action="insDocente.php">
   <fieldset>
@@ -211,7 +213,7 @@
 		<script src="js/bootstrap.min.js"></script>
     <script src="js/jquery.dataTables.min.js"></script>
     <script src="js/dataTables.bootstrap.min.js"></script>
-
+</div>
 </body>
 </html>
 
