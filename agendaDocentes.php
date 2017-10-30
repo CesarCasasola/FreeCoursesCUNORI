@@ -17,6 +17,9 @@
 </head>
 <body>
 
+
+  <h1 align="center">Agenda de Docentes</h1>
+
 <form method="post" id="main-form" class="form-horizontal" action="insDocente.php">
   <fieldset>
   <legend>Agregar Docente</legend>

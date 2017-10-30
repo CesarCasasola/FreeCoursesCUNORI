@@ -5,7 +5,7 @@
     $dbuser = 'root';
     $password = 'dbn0w';
     $dbname = 'cursos_libres';
-  
+
     $nombre = filter_input(INPUT_POST, "nombre", FILTER_SANITIZE_STRING);
     $apellido = filter_input(INPUT_POST, "apellido", FILTER_SANITIZE_STRING);
     $profesion = filter_input(INPUT_POST, "profesion", FILTER_SANITIZE_STRING);
@@ -15,8 +15,7 @@
     $exp = filter_input(INPUT_POST, "exp", FILTER_SANITIZE_STRING);
     $competencias = filter_input(INPUT_POST, "competencias", FILTER_SANITIZE_STRING);
 
-    echo "$nombre, $apellido, $dpi, $mail, $tel, $exp, $competencias";
-
+  
     $database = new mysqli($dbserver, $dbuser, $password, $dbname);
     if($database->connect_errno) {
       die("No se pudo conectar a la base de datos");
@@ -31,7 +30,7 @@
       }
       mysqli_close($database);
     }
-    
+
   }
   header('Location:	agendaDocentes.php');
 ?>
