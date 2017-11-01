@@ -53,16 +53,16 @@ if($database->connect_errno) {
 <body>
 <div class="container">
 <div>
-  <h1 align="center">Administración de Cursos</h1>
+  <h1 align="center">Administración de Cursos</h1><br><br>
 </div>
 
-<form method="post" id="main-form" action="insDocente.php">
+<form method="post" id="main-form" action="insCurso.php">
   <fieldset>
   <legend>Agregar Curso</legend>
 
   <div class="form-group">
     <label for="nombre">Nombre del curso:</label>
-    <input type="text" class="form-control" id="nombre" name="nombre" required maxlength="50" oninvalid="this.setCustomValidity('Ingrese correctamente el nombre del curso. ')" oninput="setCustomValidity('')">
+    <input type="text" class="form-control" id="nombre" name="nombre" required maxlength="80" oninvalid="this.setCustomValidity('Ingrese correctamente el nombre del curso. ')" oninput="setCustomValidity('')">
   </div><br>
 
 
@@ -128,7 +128,7 @@ if($database->connect_errno) {
     </div>
   </div><br><br><br><br><br><br><br>
 
-  <br><br><h5 align="center"><b>Fechas de las clases:</b></h5>
+  <!--<br><br><h5 align="center"><b>Fechas de las clases:</b></h5>
 
   <div class="form-group">
     <div class="col-sm-2">
@@ -155,7 +155,7 @@ if($database->connect_errno) {
     <label>Clase 6 [Opcional] <input type="text" class="form-control date" id="fecha6" name="fecha5" size="6" ></label>
     </div>
 
-  </div><br><br>
+  </div><br><br>-->
 
 <br><div class="form-group">
   <div class="col-sm-offset-6 col-sm-10">

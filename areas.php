@@ -27,12 +27,12 @@
 
   <div class="form-group">
     <label for="nombre">Nombre del área:</label>
-    <input type="text" class="form-control" id="nombre" name="nombre" required maxlength="30" oninvalid="this.setCustomValidity('Ingrese correctamente el nombre del área. ')" oninput="setCustomValidity('')">
+    <input type="text" class="form-control" id="nombre" name="nombre" required maxlength="80" oninvalid="this.setCustomValidity('Ingrese correctamente el nombre del área. ')" oninput="setCustomValidity('')">
   </div><br>
 
   <div class="form-group">
     <label for="descripcion">Descripción del área:</label>
-    <input type="text" class="form-control" id="descripcion" name="descripcion" required maxlength="40" oninvalid="this.setCustomValidity('Ingrese correctamente la descripción del área. ')" oninput="setCustomValidity('')">
+    <input type="text" class="form-control" id="descripcion" name="descripcion" required maxlength="100" oninvalid="this.setCustomValidity('Ingrese correctamente la descripción del área. ')" oninput="setCustomValidity('')">
   </div>
 
 
@@ -92,8 +92,8 @@
                         <form class="form-vertical" method="POST" action="upArea.php">
                           <div class="modal-body form-group">
                             <input type="hidden" name="id" value="'.$registroArea['IDAREA'].'"/>
-                            <label class"control-label col-sm-4">Nombre: </label><input class="form-control" required  name="nombre" id="nombre-'.$registroArea['IDAREA'].'" maxlength="30" oninvalid="this.setCustomValidity(\"Ingrese correctamente el nombre.\")" value="'.$registroArea['NOMBRE'].'"/></br>
-                            <label class"control-label col-sm-4">Descripción: </label><input class="form-control" required  name="descripcion" id="descripcion-'.$registroArea['IDAREA'].'" maxlength="40" oninvalid="this.setCustomValidity("Ingrese correctamente la descripcion.")" value="'.$registroArea['DESCRIPCION'].'"/></br>
+                            <label class"control-label col-sm-4">Nombre: </label><input class="form-control" required  name="nombre" id="nombre-'.$registroArea['IDAREA'].'" maxlength="80" oninvalid="this.setCustomValidity(\"Ingrese correctamente el nombre.\")" value="'.$registroArea['NOMBRE'].'"/></br>
+                            <label class"control-label col-sm-4">Descripción: </label><input class="form-control" required  name="descripcion" id="descripcion-'.$registroArea['IDAREA'].'" maxlength="100" oninvalid="this.setCustomValidity("Ingrese correctamente la descripcion.")" value="'.$registroArea['DESCRIPCION'].'"/></br>
                             <br>
                           </div>
                           <div class="modal-footer">
