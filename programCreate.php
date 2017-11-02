@@ -21,7 +21,7 @@ function cambiaf_a_mysql($fecha){//funcion para cambiar fecha a formato YYYY-mm-
   return $date;
 }
 
-function cambiaf_a_esp($fecha){
+function cambiaf_a_esp($fecha){//funcion para cambiar fecha a formato dd-mm-YYYY
   $date = substr($fecha, 8, 2);
   $date = $date.'-'.substr($fecha, 5, 2);
   $date = $date.'-'.substr($fecha, 0, 4);

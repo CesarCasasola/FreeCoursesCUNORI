@@ -15,8 +15,8 @@ if($database->connect_errno) {
   $docentes="SELECT NOMBRE, APELLIDO, DPI_DOCENTE FROM DOCENTE order by APELLIDO ASC, NOMBRE ASC";
   $queryDocentes= $database->query($docentes);
 
-  while($registroDocente  = $queryDocentes->fetch_array( MYSQLI_BOTH)){
-    $docOptions = $docOptions.'<option value="'.$registroDocente['DPI_DOCENTE'].'">'.$registroDocente['NOMBRE'].' '.$registroDocente['APELLIDO'].'</option>';
+  while($registroCurso  = $queryDocentes->fetch_array( MYSQLI_BOTH)){
+    $docOptions = $docOptions.'<option value="'.$registroCurso['DPI_DOCENTE'].'">'.$registroCurso['NOMBRE'].' '.$registroCurso['APELLIDO'].'</option>';
   }
 
   $areas="SELECT IDAREA, NOMBRE FROM AREA order by NOMBRE ASC";
@@ -93,12 +93,12 @@ if($database->connect_errno) {
 
   <div class="form-group">
     <div class="checkbox col-sm-4">
-      <label class="checkbox-inline"> <input type="checkbox" id="necesitaP" name="necesitaP" value="1"> <b>Necesita prerrequisito.</b> </label>
+      <label class="checkbox-inline"> <input type="checkbox" id="necesitaP" name="necesitaP" value="1" onchange="habilitaP(this)"> <b>Necesita prerrequisito.</b> </label>
     </div>
 
     <label class="control-label col-sm-2" for="req">Descripción de prerrequisitos:</label>
       <div class="col-sm-6">
-        <textarea class="form-control" id="req" name="req" cols="100" rows="2"></textarea>
+        <textarea class="form-control" id="req" name="req" cols="100" rows="2" disabled></textarea>
       </div>
   </div><br><br>
 
@@ -110,10 +110,10 @@ if($database->connect_errno) {
         <option value="Domingo">Domingo</option>
         <option value="Lunes">Lunes</option>
         <option value="Martes">Martes</option>
-        <option value="Miércoles">Miércoles</option>
+        <option value="Miercoles">Miércoles</option>
         <option value="Jueves">Jueves</option>
         <option value="Viernes">Viernes</option>
-        <option value="Sábado">Sábado</option>
+        <option value="Sabado">Sábado</option>
       </select>
     </div>
 
@@ -128,7 +128,7 @@ if($database->connect_errno) {
     </div>
   </div><br><br><br><br><br><br><br>
 
-  <!--<br><br><h5 align="center"><b>Fechas de las clases:</b></h5>
+  <br><br><h5 align="center"><b>Fechas de las clases:</b></h5>
 
   <div class="form-group">
     <div class="col-sm-2">
@@ -152,10 +152,10 @@ if($database->connect_errno) {
     </div>
 
     <div class="col-sm-2">
-    <label>Clase 6 [Opcional] <input type="text" class="form-control date" id="fecha6" name="fecha5" size="6" ></label>
+    <label>Clase 6 [Opcional] <input type="text" class="form-control date" id="fecha6" name="fecha6" size="8" ></label>
     </div>
 
-  </div><br><br>-->
+  </div><br><br>
 
 <br><div class="form-group">
   <div class="col-sm-offset-6 col-sm-10">
@@ -167,24 +167,35 @@ if($database->connect_errno) {
 </form>
 
 
+
 <div style="overflow-x:auto;">
 			<table class="table table-active table-responsive table-bordered table-condensed table-striped" id="miTabla">
 
 					<thead>
 					<tr class="info">
             <th>Nombre</th>
-            <th>Apellidos</th>
-            <th>DPI</th>
-            <th>Profesión</th>
-            <th>Teléfono</th>
-            <th>Correo</th>
-            <th>Experiencia Laboral</th>
-            <th>Competencias</th>
-            <th>Opciones</th>
+            <th>Área</th>
+            <th>Cupo</th>
+            <th>Día</th>
+            <th>Horario</th>
+            <th>Docente(s)</th>
+            <th>Prerrequisitos</th>
+            <th>Fechas</th>
+            <th>Editar</th>
           </tr>
           </thead>
           <tbody>
             <?php
+
+
+            function cambiaf_a_esp($fecha){//funcion para cambiar fecha a formato dd-mm-YYYY
+              $date = substr($fecha, 8, 2);
+              $date = $date.'-'.substr($fecha, 5, 2);
+              $date = $date.'-'.substr($fecha, 0, 4);
+              return $date;
+            }
+
+
               $dbserver = '127.0.0.1';
               $dbuser = 'root';
               $password = 'dbn0w';
@@ -195,32 +206,105 @@ if($database->connect_errno) {
               if($database->connect_errno) {
                 die("No se pudo conectar a la base de datos");
               }else{
-                $docentes="SELECT * FROM DOCENTE order by APELLIDO ASC, NOMBRE ASC";
-                $queryDocentes= $database->query($docentes);
+                $programaActivo = 0;
+                $query="SELECT IDPROGRAMA FROM PROGRAMA WHERE ESTADO=1";
+                $queryPrograma= $database->query($query);
 
-                while($registroDocente  = $queryDocentes->fetch_array( MYSQLI_BOTH)){
-                  echo '<tr id="line-'.$registroDocente['DPI_DOCENTE'].'">
-                  <td>'.$registroDocente['NOMBRE'].'</td>
-                  <td>'.$registroDocente['APELLIDO'].'</td>
-                  <td>'.$registroDocente['DPI_DOCENTE'].'</td>
-                  <td>'.$registroDocente['PROFESION'].'</td>
-                  <td>'.$registroDocente['TELEFONO'].'</td>
-                  <td>'.$registroDocente['CORREO'].'</td>
-                  <td><button class="btn btn-success" data-toggle="modal" data-target="#experiencia-'.$registroDocente['DPI_DOCENTE'].'">Experiencia</button>
+                while($programa  = $queryPrograma->fetch_array( MYSQLI_BOTH)){
+                  $programaActivo = $programa['IDPROGRAMA'];
+                }
 
-                  <div class="modal fade" id="experiencia-'.$registroDocente['DPI_DOCENTE'].'" tabindex="-1" role="dialog"
-                  aria-labelledby="experienciaLabel-'.$registroDocente['DPI_DOCENTE'].'">
+                $cursos="SELECT C.IDCURSO, C.IDPROGRAMA, A.NOMBRE AS NOMBRE_AREA, C.NOMBRE AS NOMBRE_CURSO, C.CUPO_LIMITE, C.DIA, C.IDAREA, C.HORAINICIO, C.HORAFIN, C.NECESITAPRERREQUISITOS, C.PRERREQUISITOS  FROM CURSO C INNER JOIN AREA A ON C.IDAREA=A.IDAREA WHERE IDPROGRAMA=".$programaActivo." order by C.NOMBRE ASC";
+                $queryCursos= $database->query($cursos);
+
+                while($registroCurso  = $queryCursos->fetch_array( MYSQLI_BOTH)){
+
+
+
+                  //creacion del elemento para editar y ver docentes
+                  $docOptions2 = $docOptions;
+                  $qDoc = $database->query("SELECT D.NOMBRE, D.APELLIDO, D.DPI_DOCENTE FROM DOCENTE D INNER JOIN IMPARTIDO_POR I ON D.DPI_DOCENTE = I.DPI_DOCENTE WHERE I.IDCURSO = ".$registroCurso['IDCURSO']."");
+                  while ($docCur = $qDoc->fetch_array( MYSQLI_BOTH )) {
+                      $docOptions2 = $docOptions2.'<option value="'.$docCur['DPI_DOCENTE'].'" selected>'.$docCur['NOMBRE'].' '.$docCur['APELLIDO'].'</option>';
+                  }
+
+                  //creacion de elementos para ver y editar PRERREQUISITOS
+                  $codEditaPre = '';
+                  if ($registroCurso['NECESITAPRERREQUISITOS']) {
+                    $codEditaPre = '<div class="form-group">
+                                <div class="checkbox">
+                                  <label> <input type="checkbox" id="necesitaP" name="necesitaP" value="1" onchange="habilitaPEdicion(this)" checked> <b>Necesita prerrequisito.</b> </label>
+                                </div>
+
+                                <label class="control-label col-sm-2" for="req">Descripción de prerrequisitos:</label>
+                                  <div class="col-sm-6">
+                                    <textarea class="form-control" id="reqEd" name="reqEd" cols="100" rows="2">
+                                    '.$registroCurso['PRERREQUISITOS'].'
+                                    </textarea>
+                                  </div>
+                              </div>';
+                  }else {
+                    $codEditaPre = '<div class="form-group">
+                                <div class="checkbox">
+                                  <label> <input type="checkbox" id="necesitaP" name="necesitaP" value="1" onchange="habilitaPEdicion(this)"> <b>Necesita prerrequisito.</b> </label>
+                                </div>
+
+                                <label class="control-label col-sm-2" for="req">Descripción de prerrequisitos:</label>
+                                  <div class="col-sm-6">
+                                    <textarea class="form-control" id="reqEd" name="reqEd" cols="100" rows="2" disabled>                                                                     </textarea>
+                                  </div>
+                              </div>';
+                  }
+
+                  //creacion de elemento para ver y editar fechas
+                  $i=1;
+                  $codEditaFechas = '<div class="form-group">';
+                  $qFechas = $database->query("SELECT FECHA FROM FECHAS_CURSO WHERE IDCURSO = ".$registroCurso['IDCURSO']." ORDER BY FECHA)";
+                  while ($regFecha = $qFechas->fetch_array( MYSQLI_BOTH )) {
+                      if ($i <= 4) {//fechas minimas obligatorias
+                        $codEditaFechas = $codEditaFechas.'<div class="col-sm-2">
+                        <label>Clase '.$i.' <input type="text" class="form-control date" id="fecha'.$i.'" name="fecha'.$i.'" size="8" value="'.cambiaf_a_esp($regFecha['FECHA']).'" required></label>
+                        </div>';
+                      }else {
+                        $codEditaFechas = $codEditaFechas.'<div class="col-sm-2">
+                        <label>Clase '.$i.' [Opcional]<input type="text" class="form-control date" id="fecha'.$i.'" name="fecha'.$i.'" size="8" value="'.cambiaf_a_esp($regFecha['FECHA']).'"></label>
+                        </div>';
+                      }
+                      $i++;
+                  }
+
+                  while ($i <= 6) {//si en la BD hay menos de 6 fechas, se debe agregar opcionales sin datos
+                    $codEditaFechas = $codEditaFechas.'<div class="col-sm-2">
+                    <label>Clase '.$i.' [Opcional]<input type="text" class="form-control date" id="fecha'.$i.'" name="fecha'.$i.'" size="8"></label>
+                    </div>';
+                    $i++;
+                  }
+
+                  $codEditaFechas = $codEditaFechas.' </div>';
+
+
+                  echo '<tr id="line-'.$registroCurso['IDCURSO'].'">
+                  <td>'.$registroCurso['NOMBRE_CURSO'].'</td>
+                  <td>'.$registroCurso['NOMBRE_AREA'].'</td>
+                  <td>'.$registroCurso['CUPO_LIMITE'].'</td>
+                  <td>'.$registroCurso['DIA'].'</td>
+                  <td>'.$registroCurso['HORAINICIO'].'-'.$registroCurso['HORAFIN'].'</td>
+
+                  <td><button class="btn btn-success" data-toggle="modal" data-target="#docentes-'.$registroCurso['IDCURSO'].'">Experiencia</button>
+
+                  <div class="modal fade" id="experiencia-'.$registroCurso['DPI_DOCENTE'].'" tabindex="-1" role="dialog"
+                  aria-labelledby="experienciaLabel-'.$registroCurso['DPI_DOCENTE'].'">
                     <div class="modal-dialog" role="document">
                       <div class="modal-content">
                         <div class="modal-header">
                           <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar"><span aria-hidden="true">&times;</span></button>
-                          <h4 class="modal-tittle" id="experienciaLabel-'.$registroDocente['DPI_DOCENTE'].'">Experiencia del docente: '.$registroDocente['NOMBRE'].'  '.$registroDocente['APELLIDO'].'</h4>
+                          <h4 class="modal-tittle" id="experienciaLabel-'.$registroCurso['DPI_DOCENTE'].'">Experiencia del docente: '.$registroCurso['NOMBRE'].'  '.$registroCurso['APELLIDO'].'</h4>
                         </div>
                         <form class="form-vertical" method="POST" action="upDocente.php">
                           <div class="modal-body form-group">
-                            <input type="hidden" name="id" value="'.$registroDocente['DPI_DOCENTE'].'"/>
+                            <input type="hidden" name="id" value="'.$registroCurso['DPI_DOCENTE'].'"/>
                             <label class"control-label col-sm-2">Experiencia Laboral:
-                            <textarea class="form-control" cols="50" rows="4" name="exp" maxlength="200">'.$registroDocente['EXPERIENCIALABORAL'].'</textarea>
+                            <textarea class="form-control" cols="50" rows="4" name="exp" maxlength="200">'.$registroCurso['EXPERIENCIALABORAL'].'</textarea>
                             </label>
                             <div class="modal-footer">
                             <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
@@ -232,21 +316,21 @@ if($database->connect_errno) {
                     </div>
                   </div>	</td>
 
-                  <td><button class="btn btn-info" data-toggle="modal" data-target="#competencias-'.$registroDocente['DPI_DOCENTE'].'">Competencias</button>
+                  <td><button class="btn btn-info" data-toggle="modal" data-target="#competencias-'.$registroCurso['DPI_DOCENTE'].'">Competencias</button>
 
-                  <div class="modal fade" id="competencias-'.$registroDocente['DPI_DOCENTE'].'" tabindex="-1" role="dialog"
-                  aria-labelledby="competenciasLabel-'.$registroDocente['DPI_DOCENTE'].'">
+                  <div class="modal fade" id="competencias-'.$registroCurso['DPI_DOCENTE'].'" tabindex="-1" role="dialog"
+                  aria-labelledby="competenciasLabel-'.$registroCurso['DPI_DOCENTE'].'">
                     <div class="modal-dialog" role="document">
                       <div class="modal-content">
                         <div class="modal-header">
                           <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar"><span aria-hidden="true">&times;</span></button>
-                          <h4 class="modal-tittle" id="competenciasLabel-'.$registroDocente['DPI_DOCENTE'].'">Competencias del docente: '.$registroDocente['NOMBRE'].'  '.$registroDocente['APELLIDO'].'</h4>
+                          <h4 class="modal-tittle" id="competenciasLabel-'.$registroCurso['DPI_DOCENTE'].'">Competencias del docente: '.$registroCurso['NOMBRE'].'  '.$registroCurso['APELLIDO'].'</h4>
                         </div>
                         <form class="form-vertical" method="POST" action="upDocente.php">
                           <div class="modal-body form-group">
-                            <input type="hidden" name="id" value="'.$registroDocente['DPI_DOCENTE'].'"/>
+                            <input type="hidden" name="id" value="'.$registroCurso['DPI_DOCENTE'].'"/>
                             <label class"control-label col-sm-2">Competencias:
-                            <textarea class="form-control" cols="50" rows="4" name="competencias" maxlength="200">'.$registroDocente['COMPETENCIAS'].'</textarea>
+                            <textarea class="form-control" cols="50" rows="4" name="competencias" maxlength="200">'.$registroCurso['COMPETENCIAS'].'</textarea>
                             </label>
                             <div class="modal-footer">
                             <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
@@ -258,25 +342,25 @@ if($database->connect_errno) {
                     </div>
                   </div></td>
 
-                  <td><button class="btn btn-warning" data-toggle="modal" data-target="#edit-'.$registroDocente['DPI_DOCENTE'].'">Editar</button>
+                  <td><button class="btn btn-warning" data-toggle="modal" data-target="#edit-'.$registroCurso['DPI_DOCENTE'].'">Editar</button>
 
-                  <div class="modal fade" id="edit-'.$registroDocente['DPI_DOCENTE'].'" tabindex="-1" role="dialog"
-                  aria-labelledby="editLabel-'.$registroDocente['DPI_DOCENTE'].'">
+                  <div class="modal fade" id="edit-'.$registroCurso['DPI_DOCENTE'].'" tabindex="-1" role="dialog"
+                  aria-labelledby="editLabel-'.$registroCurso['DPI_DOCENTE'].'">
                     <div class="modal-dialog" role="document">
                       <div class="modal-content">
                         <div class="modal-header">
                           <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar"><span aria-hidden="true">&times;</span></button>
-                          <h4 class="modal-tittle" id="editLabel-'.$registroDocente['DPI_DOCENTE'].'">Editar</h4>
+                          <h4 class="modal-tittle" id="editLabel-'.$registroCurso['DPI_DOCENTE'].'">Editar</h4>
                         </div>
                         <form class="form-vertical" method="POST" action="upDocente.php">
                           <div class="modal-body form-group">
-                            <input type="hidden" name="id" value="'.$registroDocente['DPI_DOCENTE'].'"/>
-                            <label class"control-label col-sm-2">Nombre: </label><input class="form-control" required  name="nombre" id="nombre-'.$registroDocente['DPI_DOCENTE'].'" maxlength="15" oninvalid="this.setCustomValidity(\"Ingrese correctamente el nombre.\")" value="'.$registroDocente['NOMBRE'].'"/></br>
-                            <label class"control-label col-sm-2">Apellido: </label><input class="form-control" required  name="apellido" id="apellido-'.$registroDocente['DPI_DOCENTE'].'" maxlength="15" oninvalid="this.setCustomValidity("Ingrese correctamente el apellido.")" value="'.$registroDocente['APELLIDO'].'"/></br>
-                            <label class"control-label col-sm-2">DPI: </label><input type="number" class="form-control" required  name="dpi" id="dpi-'.$registroDocente['DPI_DOCENTE'].'" min="1000000000000" max="9999999999999"  oninvalid="this.setCustomValidity("Ingrese correctamente los 13 dígitos del CUI.")"  value="'.$registroDocente['DPI_DOCENTE'].'"/></br>
-                            <label class"control-label col-sm-2">Correo: </label><input type="email" class="form-control" required  name="mail" id="mail-'.$registroDocente['DPI_DOCENTE'].'" maxlength="25" required oninvalid="this.setCustomValidity("Ingrese correctamente el correo electrónico.")" value="'.$registroDocente['CORREO'].'"/></br>
-                            <label class"control-label col-sm-2">Teléfono: </label><input type="number" class="form-control" required  name="tel" id="tel-'.$registroDocente['DPI_DOCENTE'].'" min="1000000" max="99999999" oninvalid="this.setCustomValidity("Ingrese correctamente los 8 dígitos del número de teléfono.")" value="'.$registroDocente['TELEFONO'].'"/></br>
-                            <label class"control-label col-sm-2">Profesión: </label><input class="form-control" required  name="profesion" id="profesion-'.$registroDocente['DPI_DOCENTE'].'" maxlength="25" oninvalid="this.setCustomValidity("Ingrese correctamente la profesion.")" value="'.$registroDocente['PROFESION'].'"/></br>
+                            <input type="hidden" name="id" value="'.$registroCurso['DPI_DOCENTE'].'"/>
+                            <label class"control-label col-sm-2">Nombre: </label><input class="form-control" required  name="nombre" id="nombre-'.$registroCurso['DPI_DOCENTE'].'" maxlength="15" oninvalid="this.setCustomValidity(\"Ingrese correctamente el nombre.\")" value="'.$registroCurso['NOMBRE'].'"/></br>
+                            <label class"control-label col-sm-2">Apellido: </label><input class="form-control" required  name="apellido" id="apellido-'.$registroCurso['DPI_DOCENTE'].'" maxlength="15" oninvalid="this.setCustomValidity("Ingrese correctamente el apellido.")" value="'.$registroCurso['APELLIDO'].'"/></br>
+                            <label class"control-label col-sm-2">DPI: </label><input type="number" class="form-control" required  name="dpi" id="dpi-'.$registroCurso['DPI_DOCENTE'].'" min="1000000000000" max="9999999999999"  oninvalid="this.setCustomValidity("Ingrese correctamente los 13 dígitos del CUI.")"  value="'.$registroCurso['DPI_DOCENTE'].'"/></br>
+                            <label class"control-label col-sm-2">Correo: </label><input type="email" class="form-control" required  name="mail" id="mail-'.$registroCurso['DPI_DOCENTE'].'" maxlength="25" required oninvalid="this.setCustomValidity("Ingrese correctamente el correo electrónico.")" value="'.$registroCurso['CORREO'].'"/></br>
+                            <label class"control-label col-sm-2">Teléfono: </label><input type="number" class="form-control" required  name="tel" id="tel-'.$registroCurso['DPI_DOCENTE'].'" min="1000000" max="99999999" oninvalid="this.setCustomValidity("Ingrese correctamente los 8 dígitos del número de teléfono.")" value="'.$registroCurso['TELEFONO'].'"/></br>
+                            <label class"control-label col-sm-2">Profesión: </label><input class="form-control" required  name="profesion" id="profesion-'.$registroCurso['DPI_DOCENTE'].'" maxlength="25" oninvalid="this.setCustomValidity("Ingrese correctamente la profesion.")" value="'.$registroCurso['PROFESION'].'"/></br>
                           </div>
                           <div class="modal-footer">
                           <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
@@ -312,7 +396,9 @@ if($database->connect_errno) {
       $('#miTabla').dataTable();
       $('#hora1').clockInput();
       $('#hora2').clockInput();
-      $('.pick').select2();
+      $('.pick').select2({
+        maximumSelectionLength: 4,
+      });
     });
 
     $.datepicker.regional['es'] = {
@@ -336,6 +422,24 @@ if($database->connect_errno) {
     $(function () {
     $(".date").datepicker();
     });
+
+    function habilitaP(checkboxElem){
+      if (checkboxElem.checked) {
+            document.getElementById('req').disabled=false;
+      }else{
+            document.getElementById('req').value ="";
+            document.getElementById('req').disabled=true;
+      }
+    }
+
+    function habilitaPEdicion(checkboxElem){
+      if (checkboxElem.checked) {
+            document.getElementById('reqEd').disabled=false;
+      }else{
+            document.getElementById('reqEd').value ="";
+            document.getElementById('reqEd').disabled=true;
+      }
+    }
 
 </script>
 </html>
