@@ -230,6 +230,7 @@ if($database->connect_errno) {
 
                   //creacion de elementos para ver y editar PRERREQUISITOS
                   $codEditaPre = '';
+                  $colorBtn = '';
                   if ($registroCurso['NECESITAPRERREQUISITOS']) {
                     $codEditaPre = '<div class="form-group">
                                 <div class="checkbox">
@@ -243,6 +244,7 @@ if($database->connect_errno) {
                                     </textarea>
                                   </div>
                               </div>';
+                      $colorBtn = "btn-primary";
                   }else {
                     $codEditaPre = '<div class="form-group">
                                 <div class="checkbox">
@@ -254,12 +256,13 @@ if($database->connect_errno) {
                                     <textarea class="form-control" id="reqEd" name="reqEd" cols="100" rows="2" disabled>                                                                     </textarea>
                                   </div>
                               </div>';
+                      $colorBtn = 'btn-default';
                   }
 
                   //creacion de elemento para ver y editar fechas
                   $i=1;
                   $codEditaFechas = '<div class="form-group">';
-                  $qFechas = $database->query("SELECT FECHA FROM FECHAS_CURSO WHERE IDCURSO = ".$registroCurso['IDCURSO']." ORDER BY FECHA)";
+                  $qFechas = $database->query("SELECT FECHA FROM FECHAS_CURSO WHERE IDCURSO = ".$registroCurso['IDCURSO']." ORDER BY FECHA)");
                   while ($regFecha = $qFechas->fetch_array( MYSQLI_BOTH )) {
                       if ($i <= 4) {//fechas minimas obligatorias
                         $codEditaFechas = $codEditaFechas.'<div class="col-sm-2">
