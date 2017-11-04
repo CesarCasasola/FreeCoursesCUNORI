@@ -1,20 +1,3 @@
-<!--<!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8">
-    <title></title>
-    <link rel="stylesheet" href="css/bootstrap.min.css">
-
-		<link rel="stylesheet" href="css/bootstrap-theme.min.css">
-    <link rel="stylesheet" href="css/dataTables.bootstrap.min.css">
-    <script type="text/javascript" src="js/jquery.min.js"></script>
-    <script src="js/bootstrap.min.js"></script>
-    <script src="js/jquery.dataTables.min.js"></script>
-    <script src="js/dataTables.bootstrap.min.js"></script>
-  </head>
-  <body>
-    <div class="container">-->
-
 
 <?php
 
@@ -110,7 +93,7 @@ if ($idCurso) {
                       </div>
                     </div>
 
-                  </form> </div><br><br><br><br>';
+                  </form> </div><br><br><br>';
 
       $str = $str.'<div>
             <h3 align="center">Estudiantes inscritos</h3>
@@ -143,7 +126,7 @@ if ($idCurso) {
             $col = 'txt-muted';
           }
 
-          $str = $str.'<tr class="'.$color.'">
+          $str = $str.'<tr class="'.$col.'">
             <th>'.$i.'</th>
             <th>'.$regEst['NOMBRE'].' '.$regEst['SEGUNDONOMBRE'].' '.$regEst['APELLIDO'].' '.$regEst['SEGUNDOAPELLIDO'].'</th>
             <th>'.$regEst['TELEFONO'].'</th>

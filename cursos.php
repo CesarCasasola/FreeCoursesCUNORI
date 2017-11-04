@@ -235,13 +235,11 @@ if($database->connect_errno) {
                     $codEditaPre = '<div class="form-group">
                                 <div class="checkbox">
                                   <label> <input type="checkbox" id="necesitaP" name="necesitaP" value="1" onchange="habilitaPEdicion(this)" checked> <b>Necesita prerrequisito.</b> </label>
-                                </div>
+                                </div><br><br>
 
-                                <label class="control-label col-sm-2" for="req">Descripción de prerrequisitos:</label>
-                                  <div class="col-sm-6">
-                                    <textarea class="form-control" id="reqEd" name="reqEd" cols="100" rows="2">
-                                    '.$registroCurso['PRERREQUISITOS'].'
-                                    </textarea>
+                                <label class="control-label col-sm-2" for="req">Descripción:</label>
+                                  <div class="col-sm-10">
+                                    <textarea class="form-control" id="reqEd" name="reqEd" cols="100" rows="2">'.$registroCurso['PRERREQUISITOS'].'</textarea>
                                   </div>
                               </div>';
                       $colorBtn = "btn-primary";
@@ -249,11 +247,11 @@ if($database->connect_errno) {
                     $codEditaPre = '<div class="form-group">
                                 <div class="checkbox">
                                   <label> <input type="checkbox" id="necesitaP" name="necesitaP" value="1" onchange="habilitaPEdicion(this)"> <b>Necesita prerrequisito.</b> </label>
-                                </div>
+                                </div><br><br>
 
-                                <label class="control-label col-sm-2" for="req">Descripción de prerrequisitos:</label>
-                                  <div class="col-sm-6">
-                                    <textarea class="form-control" id="reqEd" name="reqEd" cols="100" rows="2" disabled>                                                                     </textarea>
+                                <label class="control-label col-sm-2" for="req">Descripción:</label>
+                                  <div class="col-sm-10">
+                                    <textarea class="form-control" id="reqEd" name="reqEd" cols="100" rows="2" disabled></textarea>
                                   </div>
                               </div>';
                       $colorBtn = 'btn-default';
@@ -262,7 +260,7 @@ if($database->connect_errno) {
                   //creacion de elemento para ver y editar fechas
                   $i=1;
                   $codEditaFechas = '<div class="form-group">';
-                  $qFechas = $database->query("SELECT FECHA FROM FECHAS_CURSO WHERE IDCURSO = ".$registroCurso['IDCURSO']." ORDER BY FECHA)");
+                  $qFechas = $database->query("SELECT FECHA FROM FECHAS_CURSO WHERE IDCURSO = ".$registroCurso['IDCURSO']." ORDER BY FECHA");
                   while ($regFecha = $qFechas->fetch_array( MYSQLI_BOTH )) {
                       if ($i <= 4) {//fechas minimas obligatorias
                         $codEditaFechas = $codEditaFechas.'<div class="col-sm-2">
@@ -291,27 +289,30 @@ if($database->connect_errno) {
                   <td>'.$registroCurso['NOMBRE_AREA'].'</td>
                   <td>'.$registroCurso['CUPO_LIMITE'].'</td>
                   <td>'.$registroCurso['DIA'].'</td>
-                  <td>'.$registroCurso['HORAINICIO'].'-'.$registroCurso['HORAFIN'].'</td>
+                  <td>'.substr($registroCurso['HORAINICIO'], 0, 5).'-'.substr($registroCurso['HORAFIN'], 0, 5).'</td>
 
-                  <td><button class="btn btn-success" data-toggle="modal" data-target="#docentes-'.$registroCurso['IDCURSO'].'">Experiencia</button>
+                  <td><button class="btn btn-success" data-toggle="modal" data-target="#docentes-'.$registroCurso['IDCURSO'].'">Docente(s)</button>
 
-                  <div class="modal fade" id="experiencia-'.$registroCurso['DPI_DOCENTE'].'" tabindex="-1" role="dialog"
-                  aria-labelledby="experienciaLabel-'.$registroCurso['DPI_DOCENTE'].'">
+                  <div class="modal fade" id="docentes-'.$registroCurso['IDCURSO'].'" tabindex="-1" role="dialog"
+                  aria-labelledby="docentesLabel-'.$registroCurso['IDCURSO'].'">
                     <div class="modal-dialog" role="document">
                       <div class="modal-content">
                         <div class="modal-header">
                           <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar"><span aria-hidden="true">&times;</span></button>
-                          <h4 class="modal-tittle" id="experienciaLabel-'.$registroCurso['DPI_DOCENTE'].'">Experiencia del docente: '.$registroCurso['NOMBRE'].'  '.$registroCurso['APELLIDO'].'</h4>
+                          <h4 class="modal-tittle" id="docentesLabel-'.$registroCurso['IDCURSO'].'">Docente(s) del curso: '.$registroCurso['NOMBRE_CURSO'].'</h4>
                         </div>
-                        <form class="form-vertical" method="POST" action="upDocente.php">
+                        <form class="form-vertical" method="POST" action="upCurso.php">
                           <div class="modal-body form-group">
-                            <input type="hidden" name="id" value="'.$registroCurso['DPI_DOCENTE'].'"/>
-                            <label class"control-label col-sm-2">Experiencia Laboral:
-                            <textarea class="form-control" cols="50" rows="4" name="exp" maxlength="200">'.$registroCurso['EXPERIENCIALABORAL'].'</textarea>
-                            </label>
+                            <input type="hidden" name="id" value="'.$registroCurso['IDCURSO'].'"/>
+                            <div class="form-group">
+                              <label for="docentes[]">Docente(s):</label>
+                              <select class="form-control pick" id="docente" name="docentes[]" multiple="multiple" required oninvalid="this.setCustomValidity('.'Seleccione el o los docentes que impartirán el curso.'.')" oninput="setCustomValidity("")">
+                                '.$docOptions2.'
+                              </select>
+                            </div><br>
                             <div class="modal-footer">
                             <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-                            <input type="submit" name="editExperiencia" value="Actualizar" class="btn btn-primary"/>
+                            <input type="submit" name="editDocentes" value="Actualizar" class="btn btn-primary"/>
                             </div>
                           </div>
                         </form>
@@ -319,23 +320,22 @@ if($database->connect_errno) {
                     </div>
                   </div>	</td>
 
-                  <td><button class="btn btn-info" data-toggle="modal" data-target="#competencias-'.$registroCurso['DPI_DOCENTE'].'">Competencias</button>
 
-                  <div class="modal fade" id="competencias-'.$registroCurso['DPI_DOCENTE'].'" tabindex="-1" role="dialog"
-                  aria-labelledby="competenciasLabel-'.$registroCurso['DPI_DOCENTE'].'">
+                  <td><button class="btn '.$colorBtn.'" data-toggle="modal" data-target="#prerrequisitos-'.$registroCurso['IDCURSO'].'">Prerrequisitos</button>
+
+                  <div class="modal fade" id="prerrequisitos-'.$registroCurso['IDCURSO'].'" tabindex="-1" role="dialog"
+                  aria-labelledby="prerrequisitosLabel-'.$registroCurso['IDCURSO'].'">
                     <div class="modal-dialog" role="document">
                       <div class="modal-content">
                         <div class="modal-header">
                           <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar"><span aria-hidden="true">&times;</span></button>
-                          <h4 class="modal-tittle" id="competenciasLabel-'.$registroCurso['DPI_DOCENTE'].'">Competencias del docente: '.$registroCurso['NOMBRE'].'  '.$registroCurso['APELLIDO'].'</h4>
+                          <h4 class="modal-tittle" id="prerrequisitosLabel-'.$registroCurso['IDCURSO'].'">Prerrequisitos del curso: '.$registroCurso['NOMBRE_CURSO'].'</h4>
                         </div>
-                        <form class="form-vertical" method="POST" action="upDocente.php">
+                        <form class="form-vertical" method="POST" action="upCurso.php">
                           <div class="modal-body form-group">
-                            <input type="hidden" name="id" value="'.$registroCurso['DPI_DOCENTE'].'"/>
-                            <label class"control-label col-sm-2">Competencias:
-                            <textarea class="form-control" cols="50" rows="4" name="competencias" maxlength="200">'.$registroCurso['COMPETENCIAS'].'</textarea>
-                            </label>
-                            <div class="modal-footer">
+                            <input type="hidden" name="id" value="'.$registroCurso['IDCURSO'].'"/>
+                            '.$codEditaPre.'
+                            <br><br><div class="modal-footer">
                             <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
                             <input type="submit" name="editCompetencias" value="Actualizar" class="btn btn-primary"/>
                             </div>

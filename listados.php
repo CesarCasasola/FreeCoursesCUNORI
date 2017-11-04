@@ -45,7 +45,7 @@
 
 <div class="form-group">
   <label class="control-label col-sm-1 col-sm-offset-2" for="area">Curso:</label>
-  <div class="col-sm-8">
+  <div class="col-sm-7">
     <select class="form-control pick" id="curso" name="curso">
       <?php echo $cursOptions; ?>
     </select>
