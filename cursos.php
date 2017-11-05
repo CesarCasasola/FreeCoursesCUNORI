@@ -18,7 +18,6 @@ if($database->connect_errno) {
   while($registroCurso  = $queryDocentes->fetch_array( MYSQLI_BOTH)){
     $docOptions = $docOptions.'<option value="'.$registroCurso['DPI_DOCENTE'].'">'.$registroCurso['NOMBRE'].' '.$registroCurso['APELLIDO'].'</option>';
   }
-
   $areas="SELECT IDAREA, NOMBRE FROM AREA order by NOMBRE ASC";
   $queryAreas= $database->query($areas);
 
@@ -46,11 +45,22 @@ if($database->connect_errno) {
     <link href="css/select2.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="css/jquery-ui.min.css">
     <link rel="stylesheet" href="css/jquery-ui.theme.min.css">
+    <script type="text/javascript" src="js/jquery.min.js"></script>
+		<script src="js/bootstrap.min.js"></script>
+    <script src="js/jquery.dataTables.min.js"></script>
+    <script src="js/dataTables.bootstrap.min.js"></script>
+    <script src="js/jquery.clockinput.min.js"></script>
+    <script src="js/select2.min.js"></script>
+    <script src="js/jquery-ui.min.js"></script>
+    <script type="text/javascript">
+    $.fn.modal.Constructor.prototype.enforceFocus = function () {};
+    </script>
 
 
 </head>
 
 <body>
+
 <div class="container">
 <div>
   <h1 align="center">Administración de Cursos</h1><br><br>
@@ -232,26 +242,26 @@ if($database->connect_errno) {
                   $codEditaPre = '';
                   $colorBtn = '';
                   if ($registroCurso['NECESITAPRERREQUISITOS']) {
-                    $codEditaPre = '<div class="form-group">
+                    $codEditaPre = '<div class="modal-body form-group">
                                 <div class="checkbox">
-                                  <label> <input type="checkbox" id="necesitaP" name="necesitaP" value="1" onchange="habilitaPEdicion(this)" checked> <b>Necesita prerrequisito.</b> </label>
+                                  <label> <input type="checkbox" id="necesitaP" name="necesitaP" value="1" onchange="habilitaPEdicion(this, '.$registroCurso['IDCURSO'].')" checked> <b>Necesita prerrequisito.</b> </label>
                                 </div><br><br>
 
-                                <label class="control-label col-sm-2" for="req">Descripción:</label>
-                                  <div class="col-sm-10">
-                                    <textarea class="form-control" id="reqEd" name="reqEd" cols="100" rows="2">'.$registroCurso['PRERREQUISITOS'].'</textarea>
+                                <label class="control-label" for="req">Descripción:</label><br>
+                                  <div class="col-sm-2">
+                                    <textarea class="form-control" id="reqEd-'.$registroCurso['IDCURSO'].'" name="reqEd" cols="50" rows="4">'.$registroCurso['PRERREQUISITOS'].'</textarea>
                                   </div>
                               </div>';
                       $colorBtn = "btn-primary";
                   }else {
-                    $codEditaPre = '<div class="form-group">
+                    $codEditaPre = '<div class="modal-body form-group">
                                 <div class="checkbox">
-                                  <label> <input type="checkbox" id="necesitaP" name="necesitaP" value="1" onchange="habilitaPEdicion(this)"> <b>Necesita prerrequisito.</b> </label>
+                                  <label> <input type="checkbox" id="necesitaP" name="necesitaP" value="1" onchange="habilitaPEdicion(this, '.$registroCurso['IDCURSO'].')"> <b>Necesita prerrequisito.</b> </label>
                                 </div><br><br>
 
-                                <label class="control-label col-sm-2" for="req">Descripción:</label>
-                                  <div class="col-sm-10">
-                                    <textarea class="form-control" id="reqEd" name="reqEd" cols="100" rows="2" disabled></textarea>
+                                <label class="control-label" for="req">Descripción:</label><br>
+                                  <div class="col-sm-2">
+                                    <textarea class="form-control" id="reqEd-'.$registroCurso['IDCURSO'].'" name="reqEd" cols="50" rows="4" disabled></textarea>
                                   </div>
                               </div>';
                       $colorBtn = 'btn-default';
@@ -259,25 +269,25 @@ if($database->connect_errno) {
 
                   //creacion de elemento para ver y editar fechas
                   $i=1;
-                  $codEditaFechas = '<div class="form-group">';
+                  $codEditaFechas = '';
                   $qFechas = $database->query("SELECT FECHA FROM FECHAS_CURSO WHERE IDCURSO = ".$registroCurso['IDCURSO']." ORDER BY FECHA");
                   while ($regFecha = $qFechas->fetch_array( MYSQLI_BOTH )) {
                       if ($i <= 4) {//fechas minimas obligatorias
-                        $codEditaFechas = $codEditaFechas.'<div class="col-sm-2">
-                        <label>Clase '.$i.' <input type="text" class="form-control date" id="fecha'.$i.'" name="fecha'.$i.'" size="8" value="'.cambiaf_a_esp($regFecha['FECHA']).'" required></label>
-                        </div>';
+                        $codEditaFechas = $codEditaFechas.'<div class="modal-body form-group">';
+                        $codEditaFechas = $codEditaFechas.'<label>Clase '.$i.'  <input type="date" class="form-control date" id="fecha-'.$i.'-'.$registroCurso['IDCURSO'].'" name="fecha'.$i.'" size="8" value="'.$regFecha['FECHA'].'" required></label>
+                        </div><br>';
                       }else {
-                        $codEditaFechas = $codEditaFechas.'<div class="col-sm-2">
-                        <label>Clase '.$i.' [Opcional]<input type="text" class="form-control date" id="fecha'.$i.'" name="fecha'.$i.'" size="8" value="'.cambiaf_a_esp($regFecha['FECHA']).'"></label>
-                        </div>';
+                        $codEditaFechas = $codEditaFechas.'<div class="modal-body form-group">';
+                        $codEditaFechas = $codEditaFechas.'<label>Clase '.$i.' [Opcional]<input type="date" class="form-control date" id="fecha-'.$i.'" name="fecha-'.$i.'-'.$registroCurso['IDCURSO'].'" size="8" value="'.$regFecha['FECHA'].'"></label>
+                        </div><br>';
                       }
                       $i++;
                   }
 
                   while ($i <= 6) {//si en la BD hay menos de 6 fechas, se debe agregar opcionales sin datos
-                    $codEditaFechas = $codEditaFechas.'<div class="col-sm-2">
-                    <label>Clase '.$i.' [Opcional]<input type="text" class="form-control date" id="fecha'.$i.'" name="fecha'.$i.'" size="8"></label>
-                    </div>';
+                    $codEditaFechas = $codEditaFechas.'<div class="modal-body form-group">
+                    <label>Clase '.$i.' [Opcional]<input type="date" class="form-control date" id="fecha'.$i.'" name="fecha-'.$i.'-'.$registroCurso['IDCURSO'].'" size="8"></label>
+                    </div><br>';
                     $i++;
                   }
 
@@ -293,7 +303,7 @@ if($database->connect_errno) {
 
                   <td><button class="btn btn-success" data-toggle="modal" data-target="#docentes-'.$registroCurso['IDCURSO'].'">Docente(s)</button>
 
-                  <div class="modal fade" id="docentes-'.$registroCurso['IDCURSO'].'" tabindex="-1" role="dialog"
+                  <div class="modal fade" id="docentes-'.$registroCurso['IDCURSO'].'" tabindex="-1" role="dialog" aria-hidden="true"
                   aria-labelledby="docentesLabel-'.$registroCurso['IDCURSO'].'">
                     <div class="modal-dialog" role="document">
                       <div class="modal-content">
@@ -306,7 +316,7 @@ if($database->connect_errno) {
                             <input type="hidden" name="id" value="'.$registroCurso['IDCURSO'].'"/>
                             <div class="form-group">
                               <label for="docentes[]">Docente(s):</label>
-                              <select class="form-control pick" id="docente" name="docentes[]" multiple="multiple" required oninvalid="this.setCustomValidity('.'Seleccione el o los docentes que impartirán el curso.'.')" oninput="setCustomValidity("")">
+                              <select class="form-control pick col-sm-4" id="docente" name="docentes[]" multiple="multiple" style="width : 100%;" required>
                                 '.$docOptions2.'
                               </select>
                             </div><br>
@@ -337,7 +347,7 @@ if($database->connect_errno) {
                             '.$codEditaPre.'
                             <br><br><div class="modal-footer">
                             <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-                            <input type="submit" name="editCompetencias" value="Actualizar" class="btn btn-primary"/>
+                            <input type="submit" name="editPre" value="Actualizar" class="btn btn-primary"/>
                             </div>
                           </div>
                         </form>
@@ -345,21 +355,91 @@ if($database->connect_errno) {
                     </div>
                   </div></td>
 
-                  <td><button class="btn btn-warning" data-toggle="modal" data-target="#edit-'.$registroCurso['DPI_DOCENTE'].'">Editar</button>
 
-                  <div class="modal fade" id="edit-'.$registroCurso['DPI_DOCENTE'].'" tabindex="-1" role="dialog"
-                  aria-labelledby="editLabel-'.$registroCurso['DPI_DOCENTE'].'">
+                  <td><button class="btn btn-info" data-toggle="modal" data-target="#fechas-'.$registroCurso['IDCURSO'].'">Fechas</button>
+
+                  <div class="modal fade" id="fechas-'.$registroCurso['IDCURSO'].'" tabindex="-1" role="dialog"
+                  aria-labelledby="fechasLabel-'.$registroCurso['IDCURSO'].'">
                     <div class="modal-dialog" role="document">
                       <div class="modal-content">
                         <div class="modal-header">
                           <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar"><span aria-hidden="true">&times;</span></button>
-                          <h4 class="modal-tittle" id="editLabel-'.$registroCurso['DPI_DOCENTE'].'">Editar</h4>
+                          <h4 class="modal-tittle" id="fechasLabel-'.$registroCurso['IDCURSO'].'">Fechas del curso: '.$registroCurso['NOMBRE_CURSO'].'</h4>
                         </div>
-                        <form class="form-vertical" method="POST" action="upDocente.php">
+                        <form class="form-vertical" method="POST" action="upCurso.php">
                           <div class="modal-body form-group">
-                            <input type="hidden" name="id" value="'.$registroCurso['DPI_DOCENTE'].'"/>
-                            <label class"control-label col-sm-2">Nombre: </label><input class="form-control" required  name="nombre" id="nombre-'.$registroCurso['DPI_DOCENTE'].'" maxlength="15" oninvalid="this.setCustomValidity(\"Ingrese correctamente el nombre.\")" value="'.$registroCurso['NOMBRE'].'"/></br>
-                            <label class"control-label col-sm-2">Apellido: </label><input class="form-control" required  name="apellido" id="apellido-'.$registroCurso['DPI_DOCENTE'].'" maxlength="15" oninvalid="this.setCustomValidity("Ingrese correctamente el apellido.")" value="'.$registroCurso['APELLIDO'].'"/></br>
+                            <input type="hidden" name="id" value="'.$registroCurso['IDCURSO'].'"/>
+                            <h5 align="center">El formato de fecha es: mes - día - año <h5>
+                            '.$codEditaFechas.'
+                            <br><br><div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                            <input type="submit" name="editFechas" value="Actualizar" class="btn btn-primary"/>
+                            </div>
+                          </div>
+                        </form>
+                      </div>
+                    </div>
+                  </div></td>
+
+
+
+                  <td><button class="btn btn-warning" data-toggle="modal" data-target="#edit-'.$registroCurso['IDCURSO'].'">Editar</button>
+
+                  <div class="modal fade" id="edit-'.$registroCurso['IDCURSO'].'" tabindex="-1" role="dialog"
+                  aria-labelledby="editLabel-'.$registroCurso['IDCURSO'].'">
+                    <div class="modal-dialog" role="document">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar"><span aria-hidden="true">&times;</span></button>
+                          <h4 class="modal-tittle" id="editLabel-'.$registroCurso['IDCURSO'].'">Editar</h4>
+                        </div>
+                        <form method="POST" action="upDocente.php">
+                          <div class="modal-body">
+                          <input type="hidden" name="id" value="'.$registroCurso['IDCURSO'].'"/>
+
+                            <div class="form-group">
+                            <label for=""nombre-'.$registroCurso['IDCURSO'].'"">Nombre:</label></br>
+                            <input class="form-control" required  name="nombre" id="nombre-'.$registroCurso['IDCURSO'].'" maxlength="80" oninvalid="this.setCustomValidity(\"Ingrese correctamente el nombre.\")" value="'.$registroCurso['NOMBRE_CURSO'].'">
+                            </div><br><br>
+
+
+                            <div class="form-group">
+                            <label for=""area-'.$registroCurso['IDCURSO'].'"">Área:</label></br>
+                            <select class="form-control pick" required  name="area" id="area-'.$registroCurso['IDCURSO'].'" style="width: 100%;" required>
+                            <option value="'.$registroCurso['IDAREA'].'" selected>'.$registroCurso['NOMBRE_AREA'].'</option>
+                            '.$areaOptions.'
+                            </select>
+                            </div><br><br>
+
+                            <div class="form-group">
+                            <label for=""cupo-'.$registroCurso['IDCURSO'].'"">Cupo:</label></br>
+                            <input type="number" class="form-control" required  name="cupo" id="cupo-'.$registroCurso['IDCURSO'].'" value="'.$registroCurso['CUPO_LIMITE'].'">
+                            </div><br><br>
+
+                            <div class="form-group">
+                            <label for=""dia-'.$registroCurso['IDCURSO'].'"">Día:</label></br>
+                            <select class="form-control pick" required  name="dia" id="dia-'.$registroCurso['IDCURSO'].'" style="width: 100%;" required>
+                            <option value="'.$registroCurso['DIA'].'" selected>'.$registroCurso['DIA'].'</option>
+                            <option value="Domingo">Domingo</option>
+                            <option value="Lunes">Lunes</option>
+                            <option value="Martes">Martes</option>
+                            <option value="Miercoles">Miércoles</option>
+                            <option value="Jueves">Jueves</option>
+                            <option value="Viernes">Viernes</option>
+                            <option value="Sabado">Sábado</option>
+                            </select>
+                            </div><br><br>
+
+                            <div class="form-group">
+                            <label for=""hora1-'.$registroCurso['IDCURSO'].'"">Hora inicio:</label></br>
+                            <input type="time" class="form-control" required  name="hora1" id="hora1-'.$registroCurso['IDCURSO'].'" value="'.$registroCurso['HORAINICIO'].'">
+                            </div><br><br>
+
+                            <div class="form-group">
+                            <label for=""hora2-'.$registroCurso['IDCURSO'].'"">Hora fin:</label></br>
+                            <input type="time" class="form-control" required  name="hora1" id="hora2-'.$registroCurso['IDCURSO'].'" value="'.$registroCurso['HORAFIN'].'">
+                            </div><br><br>
+
                             <label class"control-label col-sm-2">DPI: </label><input type="number" class="form-control" required  name="dpi" id="dpi-'.$registroCurso['DPI_DOCENTE'].'" min="1000000000000" max="9999999999999"  oninvalid="this.setCustomValidity("Ingrese correctamente los 13 dígitos del CUI.")"  value="'.$registroCurso['DPI_DOCENTE'].'"/></br>
                             <label class"control-label col-sm-2">Correo: </label><input type="email" class="form-control" required  name="mail" id="mail-'.$registroCurso['DPI_DOCENTE'].'" maxlength="25" required oninvalid="this.setCustomValidity("Ingrese correctamente el correo electrónico.")" value="'.$registroCurso['CORREO'].'"/></br>
                             <label class"control-label col-sm-2">Teléfono: </label><input type="number" class="form-control" required  name="tel" id="tel-'.$registroCurso['DPI_DOCENTE'].'" min="1000000" max="99999999" oninvalid="this.setCustomValidity("Ingrese correctamente los 8 dígitos del número de teléfono.")" value="'.$registroCurso['TELEFONO'].'"/></br>
@@ -383,13 +463,7 @@ if($database->connect_errno) {
       </table>
 
 
-    <script type="text/javascript" src="js/jquery.min.js"></script>
-		<script src="js/bootstrap.min.js"></script>
-    <script src="js/jquery.dataTables.min.js"></script>
-    <script src="js/dataTables.bootstrap.min.js"></script>
-    <script src="js/jquery.clockinput.min.js"></script>
-    <script src="js/select2.min.js"></script>
-    <script src="js/jquery-ui.min.js"></script>
+
 
 </div>
 </body>
@@ -402,7 +476,11 @@ if($database->connect_errno) {
       $('.pick').select2({
         maximumSelectionLength: 4,
       });
+      $(".date").datepicker();
+
     });
+
+
 
     $.datepicker.regional['es'] = {
     closeText: 'Cerrar',
@@ -435,12 +513,12 @@ if($database->connect_errno) {
       }
     }
 
-    function habilitaPEdicion(checkboxElem){
+    function habilitaPEdicion(checkboxElem, i){
       if (checkboxElem.checked) {
-            document.getElementById('reqEd').disabled=false;
+            document.getElementById('reqEd-'+i).disabled=false;
       }else{
-            document.getElementById('reqEd').value ="";
-            document.getElementById('reqEd').disabled=true;
+            //document.getElementById('reqEd-'+i).value ="";
+            document.getElementById('reqEd-'+i).disabled=true;
       }
     }
 
