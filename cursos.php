@@ -274,11 +274,11 @@ if($database->connect_errno) {
                   while ($regFecha = $qFechas->fetch_array( MYSQLI_BOTH )) {
                       if ($i <= 4) {//fechas minimas obligatorias
                         $codEditaFechas = $codEditaFechas.'<div class="modal-body form-group">';
-                        $codEditaFechas = $codEditaFechas.'<label>Clase '.$i.'  <input type="date" class="form-control date" id="fecha-'.$i.'-'.$registroCurso['IDCURSO'].'" name="fecha'.$i.'" size="8" value="'.$regFecha['FECHA'].'" required></label>
+                        $codEditaFechas = $codEditaFechas.'<label>Clase '.$i.'  <input type="date" class="form-control" id="fecha-'.$i.'-'.$registroCurso['IDCURSO'].'" name="fecha'.$i.'" size="8" value="'.$regFecha['FECHA'].'" required></label>
                         </div><br>';
                       }else {
                         $codEditaFechas = $codEditaFechas.'<div class="modal-body form-group">';
-                        $codEditaFechas = $codEditaFechas.'<label>Clase '.$i.' [Opcional]<input type="date" class="form-control date" id="fecha-'.$i.'" name="fecha-'.$i.'-'.$registroCurso['IDCURSO'].'" size="8" value="'.$regFecha['FECHA'].'"></label>
+                        $codEditaFechas = $codEditaFechas.'<label>Clase '.$i.' [Opcional]<input type="date" class="form-control" id="fecha-'.$i.'-'.$registroCurso['IDCURSO'].'" name="fecha'.$i.'" size="8" value="'.$regFecha['FECHA'].'"></label>
                         </div><br>';
                       }
                       $i++;
@@ -286,7 +286,7 @@ if($database->connect_errno) {
 
                   while ($i <= 6) {//si en la BD hay menos de 6 fechas, se debe agregar opcionales sin datos
                     $codEditaFechas = $codEditaFechas.'<div class="modal-body form-group">
-                    <label>Clase '.$i.' [Opcional]<input type="date" class="form-control date" id="fecha'.$i.'" name="fecha-'.$i.'-'.$registroCurso['IDCURSO'].'" size="8"></label>
+                    <label>Clase '.$i.' [Opcional]<input type="date" class="form-control" id="fecha-'.$i.'-'.$registroCurso['IDCURSO'].'" name="fecha'.$i.'" size="8"></label>
                     </div><br>';
                     $i++;
                   }
@@ -301,7 +301,7 @@ if($database->connect_errno) {
                   <td>'.$registroCurso['DIA'].'</td>
                   <td>'.substr($registroCurso['HORAINICIO'], 0, 5).'-'.substr($registroCurso['HORAFIN'], 0, 5).'</td>
 
-                  <td><button class="btn btn-success" data-toggle="modal" data-target="#docentes-'.$registroCurso['IDCURSO'].'">Docente(s)</button>
+                  <td><button class="btn btn-success center-block" data-toggle="modal" data-target="#docentes-'.$registroCurso['IDCURSO'].'">Docente(s)</button>
 
                   <div class="modal fade" id="docentes-'.$registroCurso['IDCURSO'].'" tabindex="-1" role="dialog" aria-hidden="true"
                   aria-labelledby="docentesLabel-'.$registroCurso['IDCURSO'].'">
@@ -331,7 +331,7 @@ if($database->connect_errno) {
                   </div>	</td>
 
 
-                  <td><button class="btn '.$colorBtn.'" data-toggle="modal" data-target="#prerrequisitos-'.$registroCurso['IDCURSO'].'">Prerrequisitos</button>
+                  <td><button class="btn '.$colorBtn.' center-block" data-toggle="modal" data-target="#prerrequisitos-'.$registroCurso['IDCURSO'].'">Prerrequisitos</button>
 
                   <div class="modal fade" id="prerrequisitos-'.$registroCurso['IDCURSO'].'" tabindex="-1" role="dialog"
                   aria-labelledby="prerrequisitosLabel-'.$registroCurso['IDCURSO'].'">
@@ -356,7 +356,7 @@ if($database->connect_errno) {
                   </div></td>
 
 
-                  <td><button class="btn btn-info" data-toggle="modal" data-target="#fechas-'.$registroCurso['IDCURSO'].'">Fechas</button>
+                  <td><button class="btn btn-info center-block" data-toggle="modal" data-target="#fechas-'.$registroCurso['IDCURSO'].'">Fechas</button>
 
                   <div class="modal fade" id="fechas-'.$registroCurso['IDCURSO'].'" tabindex="-1" role="dialog"
                   aria-labelledby="fechasLabel-'.$registroCurso['IDCURSO'].'">
@@ -383,7 +383,7 @@ if($database->connect_errno) {
 
 
 
-                  <td><button class="btn btn-warning" data-toggle="modal" data-target="#edit-'.$registroCurso['IDCURSO'].'">Editar</button>
+                  <td><button class="btn btn-warning center-block" data-toggle="modal" data-target="#edit-'.$registroCurso['IDCURSO'].'">Editar</button>
 
                   <div class="modal fade" id="edit-'.$registroCurso['IDCURSO'].'" tabindex="-1" role="dialog"
                   aria-labelledby="editLabel-'.$registroCurso['IDCURSO'].'">
@@ -393,13 +393,13 @@ if($database->connect_errno) {
                           <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar"><span aria-hidden="true">&times;</span></button>
                           <h4 class="modal-tittle" id="editLabel-'.$registroCurso['IDCURSO'].'">Editar</h4>
                         </div>
-                        <form method="POST" action="upDocente.php">
+                        <form method="POST" action="upCurso.php">
                           <div class="modal-body">
                           <input type="hidden" name="id" value="'.$registroCurso['IDCURSO'].'"/>
 
                             <div class="form-group">
                             <label for=""nombre-'.$registroCurso['IDCURSO'].'"">Nombre:</label></br>
-                            <input class="form-control" required  name="nombre" id="nombre-'.$registroCurso['IDCURSO'].'" maxlength="80" oninvalid="this.setCustomValidity(\"Ingrese correctamente el nombre.\")" value="'.$registroCurso['NOMBRE_CURSO'].'">
+                            <input class="form-control center-block" required  name="nombre" id="nombre-'.$registroCurso['IDCURSO'].'" maxlength="80" oninvalid="this.setCustomValidity(\"Ingrese correctamente el nombre.\")" value="'.$registroCurso['NOMBRE_CURSO'].'">
                             </div><br><br>
 
 
@@ -437,13 +437,8 @@ if($database->connect_errno) {
 
                             <div class="form-group">
                             <label for=""hora2-'.$registroCurso['IDCURSO'].'"">Hora fin:</label></br>
-                            <input type="time" class="form-control" required  name="hora1" id="hora2-'.$registroCurso['IDCURSO'].'" value="'.$registroCurso['HORAFIN'].'">
+                            <input type="time" class="form-control" required  name="hora2" id="hora2-'.$registroCurso['IDCURSO'].'" value="'.$registroCurso['HORAFIN'].'">
                             </div><br><br>
-
-                            <label class"control-label col-sm-2">DPI: </label><input type="number" class="form-control" required  name="dpi" id="dpi-'.$registroCurso['DPI_DOCENTE'].'" min="1000000000000" max="9999999999999"  oninvalid="this.setCustomValidity("Ingrese correctamente los 13 dígitos del CUI.")"  value="'.$registroCurso['DPI_DOCENTE'].'"/></br>
-                            <label class"control-label col-sm-2">Correo: </label><input type="email" class="form-control" required  name="mail" id="mail-'.$registroCurso['DPI_DOCENTE'].'" maxlength="25" required oninvalid="this.setCustomValidity("Ingrese correctamente el correo electrónico.")" value="'.$registroCurso['CORREO'].'"/></br>
-                            <label class"control-label col-sm-2">Teléfono: </label><input type="number" class="form-control" required  name="tel" id="tel-'.$registroCurso['DPI_DOCENTE'].'" min="1000000" max="99999999" oninvalid="this.setCustomValidity("Ingrese correctamente los 8 dígitos del número de teléfono.")" value="'.$registroCurso['TELEFONO'].'"/></br>
-                            <label class"control-label col-sm-2">Profesión: </label><input class="form-control" required  name="profesion" id="profesion-'.$registroCurso['DPI_DOCENTE'].'" maxlength="25" oninvalid="this.setCustomValidity("Ingrese correctamente la profesion.")" value="'.$registroCurso['PROFESION'].'"/></br>
                           </div>
                           <div class="modal-footer">
                           <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>

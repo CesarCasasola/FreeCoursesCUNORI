@@ -102,7 +102,7 @@ if ($idCurso) {
               <li class="list-group-item">No Confirmados. <span class="badge">'.$numNoConfirmados.'</span></li>
             </ul>
 
-      			<table class="table table-active table-responsive table-bordered table-condensed table-striped" id="miTabla">
+      			<table class="table table-active table-responsive table-bordered table-condensed" id="miTabla">
 
       					<thead>
       					<tr class="bg-primary">
