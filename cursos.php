@@ -30,7 +30,7 @@ if($database->connect_errno) {
 <!DOCTYPE html>
 <html>
 <head>
-    <title></title>
+    <title>Cursos</title>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
 
@@ -61,9 +61,40 @@ if($database->connect_errno) {
 
 <body>
 
+  <nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container-fluid">
+
+      <div class="navbar-header">
+       <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+         <span class="icon-bar"></span>
+         <span class="icon-bar"></span>
+         <span class="icon-bar"></span>
+       </button>
+       <a class="navbar-brand" href="#">Cursos Libres</a>
+     </div>
+
+      <div class="collapse navbar-collapse" id="myNavbar">
+      <ul class="nav navbar-nav">
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#">Administrar
+          <span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="areas.php">Áreas</a></li>
+            <li><a href="agendaDocentes.php">Docentes</a></li>
+            <li class="active"><a href="cursos.php">Cursos</a></li>
+          </ul>
+        </li>
+        <li><a href="listados.php">Generar Listados</a></li>
+        <li><a href="crearPrograma.php">Crear Nuevo Programa</a></li>
+      </ul>
+    </div>
+
+  </div>
+  </nav><br><br>
+
 <div class="container">
 <div>
-  <h1 align="center">Administración de Cursos</h1><br><br>
+  <h1 align="center">Administración de Cursos</h1><br>
 </div>
 
 <form method="post" id="main-form" action="insCurso.php">
