@@ -17,26 +17,37 @@
 
 <body>
 
-  <nav class="navbar navbar-inverse navbar-fixed-top">
-  <div class="container-fluid">
-    <div class="navbar-header">
-      <a class="navbar-brand" href="#">Cursos Libres</a>
+<nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container-fluid">
+
+      <div class="navbar-header">
+       <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+         <span class="icon-bar"></span>
+         <span class="icon-bar"></span>
+         <span class="icon-bar"></span>
+       </button>
+       <a class="navbar-brand" href="#">Cursos Libres</a>
+     </div>
+
+      <div class="collapse navbar-collapse" id="myNavbar">
+      <ul class="nav navbar-nav">
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#">Administrar
+          <span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li class="active"><a href="areas.php">Áreas</a></li>
+            <li><a href="agendaDocentes.php">Docentes</a></li>
+            <li><a href="cursos.php">Cursos</a></li>
+          </ul>
+        </li>
+        <li><a href="listados.php">Generar Listados</a></li>
+        <li><a href="editarPrograma.php">Editar Programa</a></li>
+        <li><a href="crearPrograma.php">Crear Nuevo Programa</a></li>
+      </ul>
     </div>
-    <ul class="nav navbar-nav">
-      <li class="dropdown">
-        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Administrar
-        <span class="caret"></span></a>
-        <ul class="dropdown-menu">
-          <li class="active"><a href="areas.php">Áreas</a></li>
-          <li><a href="agendaDocentes.php">Docentes</a></li>
-          <li><a href="cursos.php">Cursos</a></li>
-        </ul>
-      </li>
-      <li><a href="listados.php">Generar Listados</a></li>
-      <li><a href="crearPrograma.php">Crear Nuevo Programa</a></li>      
-    </ul>
+
   </div>
-</nav>
+  </nav><br><br>
 
 <div class="container">
 

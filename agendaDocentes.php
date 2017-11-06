@@ -41,6 +41,7 @@
         </ul>
       </li>
       <li><a href="listados.php">Generar Listados</a></li>
+      <li><a href="editarPrograma.php">Editar Programa</a></li>
       <li><a href="crearPrograma.php">Crear Nuevo Programa</a></li>
     </ul>
   </div>

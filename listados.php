@@ -60,6 +60,7 @@
          </ul>
        </li>
        <li class="active"><a href="listados.php">Generar Listados</a></li>
+       <li><a href="editarPrograma.php">Editar Programa</a></li>
        <li><a href="crearPrograma.php">Crear Nuevo Programa</a></li>
      </ul>
    </div>
